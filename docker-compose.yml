@@ -1,0 +1,16 @@
+version: "3.3"
+
+services:
+  web:
+    build: .
+    ports:
+      - "8001:80"
+    depends_on:
+      - db
+  db:
+    image: "mcr.microsoft.com/mssql/server"
+    environment:
+      ACCEPT_EULA: "Y"
+      SA_PASSWORD: zaq1@WSX
+    ports:
+      - "6001:1433"
