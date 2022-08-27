@@ -47,13 +47,8 @@ public class Startup
 
     public Startup SetDbContext()
     {
-        var msgConnString = _builder.Configuration.GetConnectionString("DefaultConnection");
         var fileConnString = _builder.Configuration.GetConnectionString("FileStorageConnection");
-
-        _builder.Services.AddDbContext<MessageDbContext>(options =>
-        {
-            options.UseSqlServer(msgConnString).EnableSensitiveDataLogging();
-        });
+        
         _builder.Services.AddDbContext<FileDbContext>(options =>
         {
             options.UseSqlServer(fileConnString).EnableSensitiveDataLogging();
@@ -76,7 +71,7 @@ public class Startup
 
     public Startup AddInternalServices()
     {
-        _builder.Services.AddScoped<IMessageService, MessageService>();
+        _builder.Services.AddScoped<IFileTransferService, FileTransferService>();
         _logger.Debug("Internal services were successfully added");
 
         return this;
@@ -84,7 +79,6 @@ public class Startup
 
     public Startup AddInternalRepositories()
     {
-        _builder.Services.AddScoped<IMessageRepository, MessageRepository>();
         _builder.Services.AddScoped<IFileStorageRepository, FileStorageRepository>();
         _builder.Services.AddScoped<IFileTransferRepository, FileTransferRepository>();
         _logger.Debug("Internal repositories were successfully added");

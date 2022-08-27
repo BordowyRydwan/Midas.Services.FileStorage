@@ -36,6 +36,8 @@ namespace Infrastructure.Migrations
 
                     b.HasKey("Id");
 
+                    b.HasIndex("MetadataId");
+
                     b.HasIndex("TypeId");
 
                     b.ToTable("Files");
@@ -67,8 +69,11 @@ namespace Infrastructure.Migrations
 
             modelBuilder.Entity("Domain.Entities.FileMetadata", b =>
                 {
-                    b.Property<Guid>("FileId")
-                        .HasColumnType("uniqueidentifier");
+                    b.Property<decimal>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("decimal(20,0)");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<decimal>("Id"), 1L, 1);
 
                     b.Property<string>("Extension")
                         .IsRequired()
@@ -91,7 +96,7 @@ namespace Infrastructure.Migrations
                     b.Property<bool>("Visible")
                         .HasColumnType("bit");
 
-                    b.HasKey("FileId");
+                    b.HasKey("Id");
 
                     b.ToTable("FileMetadatas");
                 });
@@ -115,11 +120,19 @@ namespace Infrastructure.Migrations
 
             modelBuilder.Entity("Domain.Entities.File", b =>
                 {
+                    b.HasOne("Domain.Entities.FileMetadata", "Metadata")
+                        .WithMany()
+                        .HasForeignKey("MetadataId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
                     b.HasOne("Domain.Entities.FileType", "Type")
                         .WithMany()
                         .HasForeignKey("TypeId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
+
+                    b.Navigation("Metadata");
 
                     b.Navigation("Type");
                 });
@@ -135,23 +148,9 @@ namespace Infrastructure.Migrations
                     b.Navigation("File");
                 });
 
-            modelBuilder.Entity("Domain.Entities.FileMetadata", b =>
-                {
-                    b.HasOne("Domain.Entities.File", "File")
-                        .WithOne("Metadata")
-                        .HasForeignKey("Domain.Entities.FileMetadata", "FileId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("File");
-                });
-
             modelBuilder.Entity("Domain.Entities.File", b =>
                 {
                     b.Navigation("Downloads");
-
-                    b.Navigation("Metadata")
-                        .IsRequired();
                 });
 #pragma warning restore 612, 618
         }

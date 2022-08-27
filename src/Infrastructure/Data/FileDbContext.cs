@@ -11,16 +11,6 @@ public class FileDbContext : DbContext
     public virtual DbSet<FileType> FileTypes { get; set; }
     public virtual DbSet<FileMetadata> FileMetadatas { get; set; }
 
-    public FileDbContext()
-    {
-    }
-
-    public FileDbContext(DbContextOptions<FileDbContext> options) : base(options)
-    {
-    }
-    
-    protected override void OnModelCreating(ModelBuilder modelBuilder)
-    {
-        modelBuilder.Entity<FileMetadata>().HasKey(x => x.FileId);
-    }
+    public FileDbContext() { }
+    public FileDbContext(DbContextOptions<FileDbContext> options) : base(options) { }
 }

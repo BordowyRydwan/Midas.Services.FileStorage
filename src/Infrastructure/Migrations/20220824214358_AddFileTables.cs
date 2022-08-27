@@ -10,6 +10,24 @@ namespace Infrastructure.Migrations
         protected override void Up(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.CreateTable(
+                name: "FileMetadatas",
+                columns: table => new
+                {
+                    Id = table.Column<decimal>(type: "decimal(20,0)", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    Name = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Extension = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Mimetype = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Size = table.Column<decimal>(type: "decimal(20,0)", nullable: false),
+                    Visible = table.Column<bool>(type: "bit", nullable: false),
+                    UploadDate = table.Column<DateTime>(type: "datetime2", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_FileMetadatas", x => x.Id);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "FileTypes",
                 columns: table => new
                 {
@@ -33,6 +51,12 @@ namespace Infrastructure.Migrations
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_Files", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_Files_FileMetadatas_MetadataId",
+                        column: x => x.MetadataId,
+                        principalTable: "FileMetadatas",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
                         name: "FK_Files_FileTypes_TypeId",
                         column: x => x.TypeId,
@@ -62,33 +86,15 @@ namespace Infrastructure.Migrations
                         onDelete: ReferentialAction.Cascade);
                 });
 
-            migrationBuilder.CreateTable(
-                name: "FileMetadatas",
-                columns: table => new
-                {
-                    FileId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    Name = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    Extension = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    Mimetype = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    Size = table.Column<decimal>(type: "decimal(20,0)", nullable: false),
-                    Visible = table.Column<bool>(type: "bit", nullable: false),
-                    UploadDate = table.Column<DateTime>(type: "datetime2", nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_FileMetadatas", x => x.FileId);
-                    table.ForeignKey(
-                        name: "FK_FileMetadatas_Files_FileId",
-                        column: x => x.FileId,
-                        principalTable: "Files",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
-                });
-
             migrationBuilder.CreateIndex(
                 name: "IX_FileDownloads_FileId",
                 table: "FileDownloads",
                 column: "FileId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Files_MetadataId",
+                table: "Files",
+                column: "MetadataId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Files_TypeId",
@@ -102,10 +108,10 @@ namespace Infrastructure.Migrations
                 name: "FileDownloads");
 
             migrationBuilder.DropTable(
-                name: "FileMetadatas");
+                name: "Files");
 
             migrationBuilder.DropTable(
-                name: "Files");
+                name: "FileMetadatas");
 
             migrationBuilder.DropTable(
                 name: "FileTypes");

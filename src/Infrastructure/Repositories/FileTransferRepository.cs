@@ -52,9 +52,28 @@ public class FileTransferRepository : IFileTransferRepository
 
     public async Task<Guid> AddFile(File file)
     {
+        if (file.Type is null)
+        {
+            return Guid.Empty;
+        }
+        
+        var type = await _context.FileTypes.SingleOrDefaultAsync(x => x.Name == file.Type.Name);
+
+        if (type is not null)
+        {
+            file.Type = type;
+        }
+
         await _context.Files.AddAsync(file).ConfigureAwait(false);
         await _context.SaveChangesAsync().ConfigureAwait(false);
 
         return file.Id;
+    }
+
+    public async Task RemoveFile(Guid guid)
+    {
+        var entity = await _context.Files.FindAsync(guid).ConfigureAwait(false);
+        
+        _context.Files.Remove(entity);
     }
 }

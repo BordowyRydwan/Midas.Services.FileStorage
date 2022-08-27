@@ -9,4 +9,5 @@ public interface IFileTransferRepository
     public Task<File> GetFile(Guid guid);
     public Task<ICollection<File>> GetFiles(ICollection<Guid> guids);
     public Task<Guid> AddFile(File file);
+    public Task RemoveFile(Guid guid);
 }

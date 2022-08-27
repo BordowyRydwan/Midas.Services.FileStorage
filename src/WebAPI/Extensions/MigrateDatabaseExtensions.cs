@@ -9,9 +9,7 @@ public static class MigrateDatabaseExtension
     {
         using var scope = app.Services.GetRequiredService<IServiceScopeFactory>().CreateScope();
         using var fileCtx = scope.ServiceProvider.GetRequiredService<FileDbContext>();
-        using var messageCtx = scope.ServiceProvider.GetRequiredService<MessageDbContext>();
 
         fileCtx.Database.Migrate();
-        messageCtx.Database.Migrate();
     }
 }

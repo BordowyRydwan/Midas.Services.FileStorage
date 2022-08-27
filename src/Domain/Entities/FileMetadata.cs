@@ -2,9 +2,7 @@ namespace Domain.Entities;
 
 public class FileMetadata
 {
-    public File File { get; set; }
-    public Guid FileId { get; set; }
-    
+    public ulong Id { get; set; }
     public string Name { get; set; }
     public string Extension { get; set; }
     public string Mimetype { get; set; }
