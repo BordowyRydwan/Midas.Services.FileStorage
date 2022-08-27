@@ -36,18 +36,19 @@ public class FileStorageRepository : IFileStorageRepository
 
     public async Task<bool> ModifyFileName(Guid guid, string name)
     {
-        var metadata = await _context.FileMetadatas
-            .SingleOrDefaultAsync(x => x.FileId == guid && x.Visible)
+        var file = await _context.Files
+            .Include(x => x.Metadata)
+            .SingleOrDefaultAsync(x => x.Id == guid && x.Metadata.Visible)
             .ConfigureAwait(false);
 
-        if (metadata is null)
+        if (file is null)
         {
             return false;
         }
         
-        metadata.Name = name;
+        file.Metadata.Name = name;
 
-        _context.Update(metadata);
+        _context.Update(file);
         await _context.SaveChangesAsync().ConfigureAwait(false);
 
         return true;
@@ -55,8 +56,9 @@ public class FileStorageRepository : IFileStorageRepository
 
     public async Task<bool> MarkFileAsDeleted(Guid guid)
     {
-        var file = await _context.FileMetadatas
-            .SingleOrDefaultAsync(x => x.FileId == guid && x.Visible)
+        var file = await _context.Files
+            .Include(x => x.Metadata)
+            .SingleOrDefaultAsync(x => x.Id == guid && x.Metadata.Visible)
             .ConfigureAwait(false);
         
         if (file is null)
@@ -64,7 +66,7 @@ public class FileStorageRepository : IFileStorageRepository
             return false;
         }
         
-        file.Visible = false;
+        file.Metadata.Visible = false;
         _context.Update(file);
         await _context.SaveChangesAsync().ConfigureAwait(false);
 
