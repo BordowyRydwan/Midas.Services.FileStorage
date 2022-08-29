@@ -76,4 +76,17 @@ public class FileTransferRepository : IFileTransferRepository
         
         _context.Files.Remove(entity);
     }
+
+    public async Task AddFileDownloadRequest(Guid id, bool isSuccessful)
+    {
+        var entity = new FileDownload
+        {
+            FileId = id,
+            IsSuccessful = isSuccessful,
+            Timestamp = DateTime.UtcNow
+        };
+
+        await _context.FileDownloads.AddAsync(entity).ConfigureAwait(false);
+        await _context.SaveChangesAsync().ConfigureAwait(false);
+    }
 }

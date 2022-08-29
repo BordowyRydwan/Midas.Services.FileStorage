@@ -2,6 +2,7 @@ using Application.Dto;
 using Application.Helpers;
 using Application.Interfaces;
 using AutoMapper;
+using Domain.Entities;
 using Infrastructure.Interfaces;
 using Microsoft.Extensions.Configuration;
 
@@ -44,5 +45,78 @@ public class FileTransferService : IFileTransferService
         }
 
         return _mapper.Map<Guid, AddFileResultDto>(fileIdentifier);
+    }
+
+    public async Task<DownloadFileResultDto> HandleFileDownload(Guid id)
+    {
+        var content = Array.Empty<byte>();
+        var isDownloadSuccessful = true;
+        var fileInfo = await _fileRepository.GetFile(id).ConfigureAwait(false);
+
+        if (fileInfo is null)
+        {
+            return new DownloadFileResultDto { Found = false };
+        }
+
+        try
+        {
+            content = await fileInfo.GetFileContent(_configuration).ConfigureAwait(false);
+        }
+        catch
+        {
+            isDownloadSuccessful = false;
+        }
+        
+        await _fileRepository.AddFileDownloadRequest(id, isDownloadSuccessful);
+
+        return _mapper.Map<FileMetadata, DownloadFileResultDto>(fileInfo.Metadata, opt =>
+            opt.AfterMap((_, dest) =>
+            {
+                dest.Content = content;
+                dest.SuccessfullyDownloaded = isDownloadSuccessful;
+                dest.Found = true;
+            }
+        ));
+    }
+
+    public async Task<DownloadFileResultDto> HandleFilesDownload(DownloadFileInputsDto files)
+    {
+        var fileContents = new List<DownloadFileResultDto>();
+        var isDownloadSuccessful = false;
+        var archive = Array.Empty<byte>();
+
+        foreach (var id in files.Ids)
+        {
+            var result = await HandleFileDownload(id).ConfigureAwait(false);
+
+            if (!result.Found)
+            {
+                return new DownloadFileResultDto
+                {
+                    Found = false
+                };
+            }
+
+            if (result.SuccessfullyDownloaded)
+            {
+                fileContents.Add(result);
+            }
+        }
+
+        if (fileContents.Count == files.Ids.Count)
+        {
+            archive = await fileContents.MergeFiles().ConfigureAwait(false);
+            isDownloadSuccessful = true;
+        }
+
+        return new DownloadFileResultDto
+        {
+            Content = archive,
+            Extension = ".zip",
+            Mimetype = "application/zip",
+            Name = files.ArchiveName,
+            SuccessfullyDownloaded = isDownloadSuccessful,
+            Found = true
+        };
     }
 }

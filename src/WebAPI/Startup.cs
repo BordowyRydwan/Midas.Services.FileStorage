@@ -52,7 +52,7 @@ public class Startup
         _builder.Services.AddDbContext<FileDbContext>(options =>
         {
             options.UseSqlServer(fileConnString).EnableSensitiveDataLogging();
-        });
+        }, ServiceLifetime.Transient);
 
         _logger.Debug("SQL connection was successfully added");
 
