@@ -1,8 +1,6 @@
 using Application.Dto;
-using Application.Helpers;
 using AutoMapper;
 using Domain.Entities;
-using File = Domain.Entities.File;
 
 namespace Application.Mappings;
 
@@ -22,6 +20,11 @@ public static class AutoMapperConfig
         result.CreateMap<Guid, AddFileResultDto>()
             .ForMember(dest => dest.Id, act => act.MapFrom(src => src))
             .ForMember(dest => dest.Success, act => act.MapFrom(src => src != Guid.Empty));
+
+        result.CreateMap<FileMetadata, DownloadFileResultDto>()
+            .ForMember(dest => dest.Found, act => act.Ignore())
+            .ForMember(dest => dest.SuccessfullyDownloaded, act => act.Ignore())
+            .ForMember(dest => dest.Content, act => act.Ignore());
 
         return result;
     }

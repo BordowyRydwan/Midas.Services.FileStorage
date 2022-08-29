@@ -14,11 +14,11 @@ using WebAPI.Controllers;
 
 namespace WebAPI.IntegrationTests.Controllers;
 
-public class FileTransferControllerTests
+public class AddFileTests
 {
     private readonly FileTransferController _controller;
 
-    public FileTransferControllerTests()
+    public AddFileTests()
     {
         var configuration = new ConfigurationBuilder().AddJsonFile("appsettings.Development.json").Build();
         var connectionString = configuration.GetConnectionString("FileStorageConnection");

@@ -12,11 +12,11 @@ using File = Domain.Entities.File;
 namespace Application.UnitTests.Services;
 
 [TestFixture]
-public class FileTransferServiceTests
+public class AddFileTests
 {
     private readonly IFileTransferService _service;
     
-    public FileTransferServiceTests()
+    public AddFileTests()
     {
         var configuration = new ConfigurationBuilder().AddJsonFile("appsettings.Development.json").Build();
         configuration.GetSection("StoragePath").Value = null;

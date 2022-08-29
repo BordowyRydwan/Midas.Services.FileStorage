@@ -1,6 +1,5 @@
 using Application.Dto;
 using Application.Interfaces;
-using Application.Services;
 using Microsoft.AspNetCore.Mvc;
 using Swashbuckle.AspNetCore.Annotations;
 
@@ -33,5 +32,57 @@ public class FileTransferController : ControllerBase
         
         _logger.LogError("Could not upload a file");
         return BadRequest();
+    }
+    
+    [SwaggerOperation(Summary = "Download file from File Storage Service")]
+    [ProducesResponseType(typeof(FileContentResult), 200)]
+    [HttpPatch("Download/Single", Name = nameof(DownloadFile))]
+    public async Task<IActionResult> DownloadFile(Guid id)
+    {
+        var result = await _fileTransferService.HandleFileDownload(id).ConfigureAwait(false);
+
+        if (!result.Found)
+        {
+            _logger.LogError("Could not find a file");
+            return NotFound(); 
+        }
+
+        if (!result.SuccessfullyDownloaded)
+        {
+            _logger.LogError("An error occurred during downloading a file present in database");
+            return BadRequest(); 
+        }
+        
+        return File(
+            fileContents: result.Content, 
+            contentType: result.Mimetype, 
+            fileDownloadName: result.Name + result.Extension
+        );
+    }
+    
+    [SwaggerOperation(Summary = "Download multiple files from File Storage Service")]
+    [ProducesResponseType(typeof(FileContentResult), 200)]
+    [HttpPatch("Download/Multiple", Name = nameof(DownloadFiles))]
+    public async Task<IActionResult> DownloadFiles(DownloadFileInputsDto fileDto)
+    {
+        var result = await _fileTransferService.HandleFilesDownload(fileDto).ConfigureAwait(false);
+        
+        if (!result.Found)
+        {
+            _logger.LogError("Could not find at least one of selected files");
+            return NotFound(); 
+        }
+
+        if (!result.SuccessfullyDownloaded)
+        {
+            _logger.LogError("An error occurred during downloading a set of files present in database");
+            return BadRequest();
+        }
+        
+        return File(
+            fileContents: result.Content, 
+            contentType: result.Mimetype, 
+            fileDownloadName: result.Name + result.Extension
+        );
     }
 }
