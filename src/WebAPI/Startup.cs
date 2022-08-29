@@ -72,6 +72,7 @@ public class Startup
     public Startup AddInternalServices()
     {
         _builder.Services.AddScoped<IFileTransferService, FileTransferService>();
+        _builder.Services.AddScoped<IFileStorageService, FileStorageService>();
         _logger.Debug("Internal services were successfully added");
 
         return this;
