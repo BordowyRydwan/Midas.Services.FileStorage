@@ -6,7 +6,7 @@ using Swashbuckle.AspNetCore.Annotations;
 namespace WebAPI.Controllers;
 
 [ApiController]
-[Route("api/File")]
+[Route("api/[controller]")]
 public class FileTransferController : ControllerBase
 {
     private readonly IFileTransferService _fileTransferService;

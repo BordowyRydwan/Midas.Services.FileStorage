@@ -54,11 +54,11 @@ public class FileStorageRepository : IFileStorageRepository
         return true;
     }
 
-    public async Task<bool> MarkFileAsDeleted(Guid guid)
+    public async Task<bool> MarkFileAsDeleted(Guid id)
     {
         var file = await _context.Files
             .Include(x => x.Metadata)
-            .SingleOrDefaultAsync(x => x.Id == guid && x.Metadata.Visible)
+            .SingleOrDefaultAsync(x => x.Id == id && x.Metadata.Visible)
             .ConfigureAwait(false);
         
         if (file is null)
