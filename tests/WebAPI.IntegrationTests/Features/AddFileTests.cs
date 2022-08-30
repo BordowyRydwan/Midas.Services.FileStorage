@@ -14,7 +14,7 @@ using WebAPI.Controllers;
 
 namespace WebAPI.IntegrationTests.Controllers;
 
-public class AddFileTests
+public class AddFileTests : FileBaseTest
 {
     private readonly FileTransferController _controller;
 
@@ -58,23 +58,5 @@ public class AddFileTests
         
         var response = await _controller.AddFile(dto).ConfigureAwait(false);
         Assert.That(response, Is.TypeOf<BadRequestResult>());
-    }
-
-    private IFormFile GetMockFile(string contentType, string content)
-    {
-        var bytes = Encoding.UTF8.GetBytes(content);
-        var file = new FormFile(
-            baseStream: new MemoryStream(bytes), 
-            baseStreamOffset: 0, 
-            length: bytes.Length, 
-            name: "Data", 
-            fileName: "dummy.txt"
-        )
-        {
-            Headers = new HeaderDictionary(),
-            ContentType = contentType
-        };
-
-        return file;
     }
 }
