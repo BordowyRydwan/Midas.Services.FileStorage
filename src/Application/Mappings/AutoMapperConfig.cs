@@ -12,11 +12,6 @@ public static class AutoMapperConfig
     {
         var result = new MapperConfigurationExpression();
 
-        result.CreateMap<Message, MessageDto>().ReverseMap();
-        result.CreateMap<ICollection<Message>, MessageListDto>()
-            .ForMember(dest => dest.Items, act => act.MapFrom(src => src))
-            .ForMember(dest => dest.Count, act => act.MapFrom(src => src.Count));
-
         result.CreateMap<Guid, AddFileResultDto>()
             .ForMember(dest => dest.Id, act => act.MapFrom(src => src))
             .ForMember(dest => dest.Success, act => act.MapFrom(src => src != Guid.Empty));

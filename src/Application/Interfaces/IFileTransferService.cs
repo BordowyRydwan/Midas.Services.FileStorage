@@ -2,7 +2,7 @@ using Application.Dto;
 
 namespace Application.Interfaces;
 
-public interface IFileTransferService
+public interface IFileTransferService : IInternalService
 {
     public Task<AddFileResultDto> HandleFileUpload(AddFileDto file);
     public Task<DownloadFileResultDto> HandleFileDownload(Guid id);
