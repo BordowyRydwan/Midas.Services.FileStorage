@@ -26,6 +26,11 @@ public static class AutoMapperConfig
             .ForMember(dest => dest.SuccessfullyDownloaded, act => act.Ignore())
             .ForMember(dest => dest.Content, act => act.Ignore());
 
+        result.CreateMap<FileDownload, FileDownloadInfoDto>();
+        result.CreateMap<ICollection<FileDownload>, FileDownloadInfoListDto>()
+            .ForMember(dest => dest.Items, act => act.MapFrom(src => src))
+            .ForMember(dest => dest.Count, act => act.MapFrom(src => src.Count));
+
         return result;
     }
 
