@@ -7,14 +7,14 @@ namespace Application.UnitTests.Common;
 public class ListDtoTests
 {
     [Test]
-    [TestCase(typeof(MessageListDto))]
+    [TestCase(typeof(FileDownloadInfoListDto))]
     public void ShouldHaveCorrectListDtoProperties(Type dto)
     {
         Has.Property("Count").And.Property("Items");
     }
 
     [Test]
-    [TestCase(typeof(MessageListDto), typeof(IListDto<MessageDto>))]
+    [TestCase(typeof(FileDownloadInfoListDto), typeof(IListDto<FileDownloadInfoDto>))]
     public void ShouldDeriveFromIListDto(Type listDto, Type objectDto)
     {
         var result = objectDto.IsAssignableFrom(listDto);
@@ -24,7 +24,7 @@ public class ListDtoTests
     [Test]
     public void ShouldGettersAndSettersWorkCorrectly()
     {
-        var obj = new MessageListDto();
+        var obj = new FileDownloadInfoListDto();
 
         Assert.Multiple(() =>
         {

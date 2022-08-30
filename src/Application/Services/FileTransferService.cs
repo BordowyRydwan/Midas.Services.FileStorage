@@ -91,10 +91,7 @@ public class FileTransferService : IFileTransferService
 
             if (!result.Found)
             {
-                return new DownloadFileResultDto
-                {
-                    Found = false
-                };
+                return new DownloadFileResultDto { Found = false };
             }
 
             if (result.SuccessfullyDownloaded)
@@ -118,5 +115,11 @@ public class FileTransferService : IFileTransferService
             SuccessfullyDownloaded = isDownloadSuccessful,
             Found = true
         };
+    }
+
+    public async Task<FileDownloadInfoListDto> GetFileDownloads(Guid id)
+    {
+        var downloads = await _fileRepository.GetFileDownloads(id).ConfigureAwait(false);
+        return _mapper.Map<FileDownloadInfoListDto>(downloads);
     }
 }

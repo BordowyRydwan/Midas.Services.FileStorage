@@ -85,4 +85,20 @@ public class FileTransferController : ControllerBase
             fileDownloadName: result.Name + result.Extension
         );
     }
+    
+    [SwaggerOperation(Summary = "Get info about file downloads from File Storage Service")]
+    [ProducesResponseType(typeof(FileDownloadInfoListDto), 200)]
+    [HttpGet("Download/GetEntries", Name = nameof(GetFileDownloads))]
+    public async Task<IActionResult> GetFileDownloads(Guid id)
+    {
+        var result = await _fileTransferService.GetFileDownloads(id).ConfigureAwait(false);
+
+        if (result.Count != 0)
+        {
+            return Ok(result);
+        }
+        
+        _logger.LogError("Could not find any download request on this file");
+        return NotFound();
+    }
 }
