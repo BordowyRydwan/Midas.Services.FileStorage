@@ -31,4 +31,34 @@ public class FileStorageController : ControllerBase
         _logger.LogError("Could not found a visible file of {Id}", id);
         return NotFound();
     }
+    
+    [SwaggerOperation(Summary = "Modify type of file")]
+    [HttpPatch("Modify/Type", Name = nameof(ModifyFileType))]
+    public async Task<IActionResult> ModifyFileType(Guid id, string type)
+    {
+        var result = await _fileStorageService.ModifyFileType(id, type).ConfigureAwait(false);
+
+        if (result)
+        {
+            return Ok();
+        }
+        
+        _logger.LogError("Could not found a visible file of {Id}", id);
+        return NotFound();
+    }
+    
+    [SwaggerOperation(Summary = "Modify a name of file")]
+    [HttpPatch("Modify/Name", Name = nameof(ModifyFileName))]
+    public async Task<IActionResult> ModifyFileName(Guid id, string name)
+    {
+        var result = await _fileStorageService.ModifyFileName(id, name).ConfigureAwait(false);
+
+        if (result)
+        {
+            return Ok();
+        }
+        
+        _logger.LogError("Could not found a visible file of {Id}", id);
+        return NotFound();
+    }
 }

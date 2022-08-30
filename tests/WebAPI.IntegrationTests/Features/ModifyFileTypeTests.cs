@@ -1,28 +1,21 @@
-using System.Text;
 using Application.Dto;
-using Application.Mappings;
-using Application.Services;
 using Infrastructure.Data;
-using Infrastructure.Repositories;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
-using Microsoft.Extensions.Logging;
-using Moq;
-using NUnit.Framework;
 using WebAPI.Controllers;
 
 namespace WebAPI.IntegrationTests.Controllers;
 
 [TestFixture]
-public class MarkFileAsDeletedTests : FileBaseTest
+public class ModifyFileTypeTests : FileBaseTest
 {
     private readonly FileTransferController _transferController;
     private readonly FileStorageController _storageController;
     private Guid _fileId = Guid.Empty;
+    private string _name = "testname";
 
-    public MarkFileAsDeletedTests()
+    public ModifyFileTypeTests()
     {
         var configuration = new ConfigurationBuilder().AddJsonFile("appsettings.Development.json").Build();
         var connectionString = configuration.GetConnectionString("FileStorageConnection");
@@ -49,16 +42,16 @@ public class MarkFileAsDeletedTests : FileBaseTest
     }
     
     [Test]
-    public async Task SuccessfullyMarkedFile_ShouldReturnHTTP200()
+    public async Task SuccessfullyModifiedFilename_ShouldReturnHTTP200()
     {
-        var response = await _storageController.MarkFileAsDeleted(_fileId).ConfigureAwait(false);
+        var response = await _storageController.ModifyFileType(_fileId, _name).ConfigureAwait(false);
         Assert.That(response, Is.TypeOf<OkResult>());
     }
 
     [Test]
-    public async Task FailDuringMarkedFile_ShouldReturnHTTP404()
-    {
-        var response = await _storageController.MarkFileAsDeleted(Guid.NewGuid()).ConfigureAwait(false);
+    public async Task FailDuringModifyingFilename_ShouldReturnHTTP404()
+    { 
+        var response = await _storageController.ModifyFileType(Guid.NewGuid(), _name).ConfigureAwait(false);
         Assert.That(response, Is.TypeOf<NotFoundResult>());
     }
 }

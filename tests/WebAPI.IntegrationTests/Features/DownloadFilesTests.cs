@@ -15,7 +15,7 @@ using WebAPI.Controllers;
 namespace WebAPI.IntegrationTests.Controllers;
 
 [TestFixture]
-public class DownloadFilesTests
+public class DownloadFilesTests : FileBaseTest
 {
     private readonly FileTransferController _controller;
     private List<Guid> _downloadIds = new();
@@ -48,24 +48,6 @@ public class DownloadFilesTests
 
         var result = await _controller.AddFile(dto).ConfigureAwait(false) as OkObjectResult;
         _downloadIds = Enumerable.Repeat((result.Value as AddFileResultDto).Id, 2).ToList();
-    }
-
-    private IFormFile GetMockFile(string contentType, string content)
-    {
-        var bytes = Encoding.UTF8.GetBytes(content);
-        var file = new FormFile(
-            baseStream: new MemoryStream(bytes),
-            baseStreamOffset: 0,
-            length: bytes.Length,
-            name: "Data",
-            fileName: "dummy.txt"
-        )
-        {
-            Headers = new HeaderDictionary(),
-            ContentType = contentType
-        };
-
-        return file;
     }
 
     [Test]
