@@ -5,7 +5,7 @@ Following instructions are for Debian-based systems - but on Windows machines it
 
 ## External ports by Docker Compose
 - Web Service - 8001
-- Database - 5001
+- Database - 6001
 
 ## Environment used
 - JetBrains Rider
