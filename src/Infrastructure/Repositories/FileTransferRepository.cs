@@ -75,6 +75,7 @@ public class FileTransferRepository : IFileTransferRepository
         var entity = await _context.Files.FindAsync(guid).ConfigureAwait(false);
         
         _context.Files.Remove(entity);
+        await _context.SaveChangesAsync().ConfigureAwait(false);
     }
 
     public async Task AddFileDownloadRequest(Guid id, bool isSuccessful)
