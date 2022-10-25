@@ -28,7 +28,10 @@ public class Startup
     {
         _builder.Services.AddControllers();
         _builder.Services.AddEndpointsApiExplorer();
-        _builder.Services.AddSwaggerGen();
+        _builder.Services.AddSwaggerGen(x => {
+            x.EnableAnnotations();
+            x.SwaggerDoc("v1", new Microsoft.OpenApi.Models.OpenApiInfo { Title = "File Storage API", Version = "0.1" });
+        });
 
         return this;
     }

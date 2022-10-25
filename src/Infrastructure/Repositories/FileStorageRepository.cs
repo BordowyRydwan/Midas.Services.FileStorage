@@ -73,5 +73,18 @@ public class FileStorageRepository : IFileStorageRepository
         return true;
     }
 
-    
+    public async Task<FileMetadata> GetFileMetadata(Guid id)
+    {
+        var file = await _context.Files
+            .Include(x => x.Metadata)
+            .SingleOrDefaultAsync(x => x.Id == id && x.Metadata.Visible)
+            .ConfigureAwait(false);
+        
+        if (file is null)
+        {
+            throw new Exception("Could not find file with GUID: " + id);
+        }
+
+        return file.Metadata;
+    }
 }

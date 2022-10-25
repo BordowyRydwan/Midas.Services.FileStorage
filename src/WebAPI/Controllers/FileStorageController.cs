@@ -1,3 +1,4 @@
+using Application.Dto;
 using Application.Interfaces;
 using Microsoft.AspNetCore.Mvc;
 using Swashbuckle.AspNetCore.Annotations;
@@ -60,5 +61,22 @@ public class FileStorageController : ControllerBase
         
         _logger.LogError("Could not found a visible file of {Id}", id);
         return NotFound();
+    }
+    
+    [SwaggerOperation(Summary = "Get metadata of a file")]
+    [HttpGet("Metadata/{id}", Name = nameof(GetFileMetadata))]
+    [ProducesResponseType(typeof(FileMetadataDto), 200)]
+    public async Task<IActionResult> GetFileMetadata(Guid id)
+    {
+        try
+        {
+            var result = await _fileStorageService.GetFileMetadata(id).ConfigureAwait(false);
+            return Ok(result);
+        }
+        catch
+        {
+            _logger.LogError("Could not found a visible file of {Id}", id);
+            return NotFound();
+        }
     }
 }

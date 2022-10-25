@@ -1,3 +1,4 @@
+using Application.Dto;
 using Application.Interfaces;
 using AutoMapper;
 using Domain.Entities;
@@ -9,10 +10,12 @@ namespace Application.Services;
 public class FileStorageService : IFileStorageService
 {
     private readonly IFileStorageRepository _fileRepository;
+    private readonly IMapper _mapper;
 
-    public FileStorageService(IFileStorageRepository fileRepository)
+    public FileStorageService(IFileStorageRepository fileRepository, IMapper mapper)
     {
         _fileRepository = fileRepository;
+        _mapper = mapper;
     }
 
     public async Task<bool> MarkFileAsDeleted(Guid id)
@@ -30,5 +33,13 @@ public class FileStorageService : IFileStorageService
     public async Task<bool> ModifyFileName(Guid id, string name)
     {
         return await _fileRepository.ModifyFileName(id, name).ConfigureAwait(false);
+    }
+
+    public async Task<FileMetadataDto> GetFileMetadata(Guid id)
+    {
+        var fileMetadata = await _fileRepository.GetFileMetadata(id).ConfigureAwait(false);
+        var mappedMetadata = _mapper.Map<FileMetadata, FileMetadataDto>(fileMetadata);
+
+        return mappedMetadata;
     }
 }

@@ -1,6 +1,7 @@
 using System.Text;
 using Application.Mappings;
 using Application.Services;
+using AutoMapper;
 using Infrastructure.Data;
 using Infrastructure.Repositories;
 using Microsoft.AspNetCore.Http;
@@ -45,8 +46,9 @@ public abstract class FileBaseTest
 
     public FileStorageController SetStorageController(FileDbContext dbContext)
     {
+        var mapper = AutoMapperConfig.Initialize();
         var repository = new FileStorageRepository(dbContext);
-        var service = new FileStorageService(repository);
+        var service = new FileStorageService(repository, mapper);
         var logger = Mock.Of<ILogger<FileStorageController>>();
 
         return new FileStorageController(logger, service);
