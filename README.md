@@ -36,6 +36,23 @@ A database is containerised by using Docker. If you have to do something outside
 
 In order to do it, open the solution and edit connection string in `WebAPI/appsettings.*.json` (where `*` means config that you would like to change).
 
+## In case of certification problems on Linux dev configs
+1. Generate yourself a custom certificate using [these instructions](https://stackoverflow.com/a/59702094/16231079)
+2. To `appsettings.Development.json` add these lines:
+```
+"Kestrel": {
+    "Certificates": {
+        "Default": {
+            "Path": "<your full path>/localhost.pfx",
+            "Password": ""
+        }
+    }
+}
+```
+
+All these instuctions are not needed in Windows where HTTPS configs are being set by default and for production configs because they are having another certificates that are not self-signed.
+
+
 ### Migrations
 Default command will look like following:
 
