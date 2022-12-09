@@ -40,7 +40,13 @@ public class Startup
     {
         _builder.Services.AddCors(options =>
         {
-            options.AddPolicy("Open", builder => { builder.AllowAnyOrigin().AllowAnyHeader().AllowAnyMethod(); });
+            options.AddPolicy("Open", builder =>
+            {
+                builder.AllowAnyOrigin()
+                    .AllowAnyHeader()
+                    .AllowAnyMethod()
+                    .WithExposedHeaders("Content-Disposition");
+            });
         });
 
         _logger.Debug("The CORS open policy was successfully added");
@@ -54,8 +60,8 @@ public class Startup
         
         _builder.Services.AddDbContext<FileDbContext>(options =>
         {
-            options.UseSqlServer(fileConnString).EnableSensitiveDataLogging();
-        }, ServiceLifetime.Transient);
+            options.UseSqlServer(fileConnString, options => options.EnableRetryOnFailure()).EnableSensitiveDataLogging();
+        });
 
         _logger.Debug("SQL connection was successfully added");
 
@@ -74,8 +80,8 @@ public class Startup
 
     public Startup AddInternalServices()
     {
-        _builder.Services.AddScoped<IFileTransferService, FileTransferService>();
-        _builder.Services.AddScoped<IFileStorageService, FileStorageService>();
+        _builder.Services.AddTransient<IFileTransferService, FileTransferService>();
+        _builder.Services.AddTransient<IFileStorageService, FileStorageService>();
         _logger.Debug("Internal services were successfully added");
 
         return this;
@@ -83,8 +89,8 @@ public class Startup
 
     public Startup AddInternalRepositories()
     {
-        _builder.Services.AddScoped<IFileStorageRepository, FileStorageRepository>();
-        _builder.Services.AddScoped<IFileTransferRepository, FileTransferRepository>();
+        _builder.Services.AddTransient<IFileStorageRepository, FileStorageRepository>();
+        _builder.Services.AddTransient<IFileTransferRepository, FileTransferRepository>();
         _logger.Debug("Internal repositories were successfully added");
 
         return this;
@@ -110,10 +116,9 @@ public class Startup
             app.UseSwagger();
             app.UseSwaggerUI();
         }
-
-        app.MigrateDatabase();
-        app.UseHttpsRedirection();
         app.UseCors("Open");
+        //app.MigrateDatabase();
+        app.UseHttpsRedirection();
         app.MapControllers();
         app.Run();
 
