@@ -26,7 +26,7 @@ public class Startup
 
     public Startup SetBuilderOptions()
     {
-        _builder.Services.AddControllers();
+        _builder.Services.AddControllers().AddNewtonsoftJson();
         _builder.Services.AddEndpointsApiExplorer();
         _builder.Services.AddSwaggerGen(x => {
             x.EnableAnnotations();
@@ -60,7 +60,7 @@ public class Startup
         
         _builder.Services.AddDbContext<FileDbContext>(options =>
         {
-            options.UseSqlServer(fileConnString, options => options.EnableRetryOnFailure()).EnableSensitiveDataLogging();
+            options.UseSqlServer(fileConnString).EnableSensitiveDataLogging();
         });
 
         _logger.Debug("SQL connection was successfully added");

@@ -62,8 +62,9 @@ public class FileTransferService : IFileTransferService
         {
             content = await fileInfo.GetFileContent(_configuration).ConfigureAwait(false);
         }
-        catch
+        catch (Exception e)
         {
+            Console.WriteLine(e);
             isDownloadSuccessful = false;
         }
         

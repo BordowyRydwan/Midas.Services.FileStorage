@@ -21,6 +21,8 @@ public static class AutoMapperConfig
             .ForMember(dest => dest.SuccessfullyDownloaded, act => act.Ignore())
             .ForMember(dest => dest.Content, act => act.Ignore());
 
+        result.CreateMap<FileMetadata, FileMetadataDto>();
+
         result.CreateMap<FileDownload, FileDownloadInfoDto>();
         result.CreateMap<ICollection<FileDownload>, FileDownloadInfoListDto>()
             .ForMember(dest => dest.Items, act => act.MapFrom(src => src))

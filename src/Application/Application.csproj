@@ -10,6 +10,7 @@
     <PackageReference Include="AutoMapper" Version="11.0.1" />
     <PackageReference Include="Microsoft.AspNetCore.Http" Version="2.2.2" />
     <PackageReference Include="Microsoft.Extensions.Configuration.Json" Version="6.0.0" />
+    <PackageReference Include="NSwag.Annotations" Version="13.18.0" />
   </ItemGroup>
 
   <ItemGroup>

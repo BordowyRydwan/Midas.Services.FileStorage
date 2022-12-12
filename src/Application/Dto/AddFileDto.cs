@@ -1,4 +1,5 @@
 using Microsoft.AspNetCore.Http;
+using NSwag.Annotations;
 
 namespace Application.Dto;
 
