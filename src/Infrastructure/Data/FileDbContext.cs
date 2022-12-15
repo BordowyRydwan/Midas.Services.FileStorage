@@ -13,4 +13,9 @@ public class FileDbContext : DbContext
 
     public FileDbContext() { }
     public FileDbContext(DbContextOptions<FileDbContext> options) : base(options) { }
+
+    protected override void OnModelCreating(ModelBuilder modelBuilder)
+    {
+        modelBuilder.HasDefaultSchema("file");
+    }
 }
