@@ -117,7 +117,7 @@ public class Startup
             app.UseSwaggerUI();
         }
         app.UseCors("Open");
-        app.MigrateDatabase();
+        //app.MigrateDatabase();
         app.UseHttpsRedirection();
         app.MapControllers();
         app.Run();
