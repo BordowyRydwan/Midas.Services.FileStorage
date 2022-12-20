@@ -17,6 +17,7 @@ namespace Infrastructure.Migrations
         {
 #pragma warning disable 612, 618
             modelBuilder
+                .HasDefaultSchema("file")
                 .HasAnnotation("ProductVersion", "6.0.8")
                 .HasAnnotation("Relational:MaxIdentifierLength", 128);
 
@@ -40,7 +41,7 @@ namespace Infrastructure.Migrations
 
                     b.HasIndex("TypeId");
 
-                    b.ToTable("Files");
+                    b.ToTable("Files", "file");
                 });
 
             modelBuilder.Entity("Domain.Entities.FileDownload", b =>
@@ -64,7 +65,7 @@ namespace Infrastructure.Migrations
 
                     b.HasIndex("FileId");
 
-                    b.ToTable("FileDownloads");
+                    b.ToTable("FileDownloads", "file");
                 });
 
             modelBuilder.Entity("Domain.Entities.FileMetadata", b =>
@@ -98,7 +99,7 @@ namespace Infrastructure.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("FileMetadatas");
+                    b.ToTable("FileMetadatas", "file");
                 });
 
             modelBuilder.Entity("Domain.Entities.FileType", b =>
@@ -115,7 +116,7 @@ namespace Infrastructure.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("FileTypes");
+                    b.ToTable("FileTypes", "file");
                 });
 
             modelBuilder.Entity("Domain.Entities.File", b =>
